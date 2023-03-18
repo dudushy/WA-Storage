@@ -1,0 +1,30 @@
+{
+  "name": "wa-storage",
+  "version": "1.0.0",
+  "description": "Save files from specific chats.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node index.js --debug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dudushy/WA-Storage.git"
+  },
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "save",
+    "files",
+    "node"
+  ],
+  "author": "dudushy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dudushy/WA-Storage/issues"
+  },
+  "homepage": "https://github.com/dudushy/WA-Storage#readme",
+  "devDependencies": {
+    "eslint": "^8.36.0"
+  }
+}
