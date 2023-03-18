@@ -24,6 +24,8 @@ function createFilesFolder() {
   if (!fs.existsSync('./files')) {
     fs.mkdirSync('./files', { recursive: true });
     console.log('[createFilesFolder] created');
+  } else {
+    console.log('[createFilesFolder] already exists');
   }
 }
 
