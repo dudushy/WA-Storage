@@ -3,8 +3,7 @@ require('dotenv').config();
 
 const qrcode = require('qrcode-terminal');
 
-// const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 
 const fs = require('fs');
 
@@ -70,19 +69,19 @@ function saveImage(dataUrl, filename) {
   });
 }
 
-//TODO read img directory
-// function Images2array() {
-//   const Images = fs.readdirSync('./images');
-//   console.log('[Images2array] Images', Images);
+function images2list() {
+  const images = fs.readdirSync('./images');
+  console.log('[images2list] images', images);
 
-//   const ImagesArray = [];
+  let imagesList = '';
 
-//   for (const img of Images) {
-//     console.log('[Images2array] img', img);
-//     Images2array.push(img);
-//   }
+  for (const img of images) {
+    console.log('[images2list] img', img);
+    imagesList += `\n*${img.replace('.png', '')}*\n`;
+  }
 
-// }
+  return imagesList;
+}
 
 bot.on('qr', qr => {
   console.log('[bot#qr] generating...');
@@ -157,7 +156,7 @@ bot.on('message', async msg => {
 
   if (msg.body == '/list') {
     console.log('[bot#message] command /list');
-    msg.reply('list');
+    msg.reply(`${TITLE}Lista de arquivos:${images2list()}`);
     return;
   }
 
@@ -165,7 +164,18 @@ bot.on('message', async msg => {
     console.log('[bot#message] command /show');
 
     const id = msg.body.replace('/show ', '');
-    msg.reply(`*#${id}*`);
+    console.log('[bot#message] id', id);
+
+    try {
+      const media = MessageMedia.fromFilePath(`./images/${id}.png`);
+      console.log('[bot#message] media', media);
+      // msg.reply(media, {caption: `*${id}*`});
+      msg.reply(media);
+    } catch (error) {
+      console.log('[bot#message] error', error);
+      msg.reply(`${TITLE}Arquivo não encontrado!`);
+    }
+
     return;
   }
 });
