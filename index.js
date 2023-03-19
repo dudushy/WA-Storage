@@ -45,6 +45,12 @@ function sleep(seconds) {
   return new Promise(resolve => { console.log(`[sleep] ${seconds}s`); setTimeout(resolve, seconds * 1000); });
 }
 
+//TODO filter chat by id (CONTACT)
+//TODO read file blob
+//TODO save file blob
+//TODO read file directory
+//TODO send directory files
+
 bot.on('qr', qr => {
   console.log('[bot#qr] generating...');
   qrcode.generate(qr, { small: true });
