@@ -137,7 +137,7 @@ bot.on('message', async msg => {
     return;
   }
 
-  if (!filterChat(msg.from)) return;
+  if (process.argv[2] == '--debug') if (!filterChat(msg.from)) return;
 
   if (msg.hasMedia) {
     console.log('[bot#message] hasMedia');
