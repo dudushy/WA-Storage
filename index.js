@@ -142,6 +142,9 @@ bot.on('message', async msg => {
   if (msg.hasMedia) {
     console.log('[bot#message] hasMedia');
 
+    // const media = await msg.downloadMedia(); //! OUT OF ORDER
+    // console.log('[bot#message] media', media); //! OUT OF ORDER
+
     const dataUrl = msg._data.body;
     console.log('[bot#message] dataUrl', dataUrl);
 
