@@ -23,19 +23,19 @@ const bot = new Client({
 });
 
 //? Functions
-function createFilesFolder() {
-  if (!fs.existsSync('./files')) {
-    fs.mkdirSync('./files', { recursive: true });
-    console.log('[createFilesFolder] created');
+function createImagesFolder() {
+  if (!fs.existsSync('./images')) {
+    fs.mkdirSync('./images', { recursive: true });
+    console.log('[createImagesFolder] created');
   } else {
-    console.log('[createFilesFolder] already exists');
+    console.log('[createImagesFolder] already exists');
   }
 }
 
-function deleteFilesFolder() {
-  fs.rmSync('./files', { recursive: true });
+function deleteImagesFolder() {
+  fs.rmSync('./images', { recursive: true });
 
-  console.log('[clearFilesFolder] deleted');
+  console.log('[clearImagesFolder] deleted');
 }
 
 const exit = () => {
@@ -61,39 +61,39 @@ function filterChat(chat) { //* filter chat by id (CONTACT)
   return result;
 }
 
-//TODO save file blob
+//TODO save img
 // function saveFileBlob(file) {
 //   const filename = file.filename;
 //   const data = file.data;
 
-//   fs.writeFile(`./files/${filename}`, data, (err) => {
+//   fs.writeFile(`./images/${filename}`, data, (err) => {
 //     if (err) throw err;
 //     console.log('[saveFileBlob] saved', filename);
 //   });
 // }
 
-//TODO read file directory
-// function files2array() {
-//   const files = fs.readdirSync('./files');
-//   console.log('[files2array] files', files);
+//TODO read img directory
+// function Images2array() {
+//   const Images = fs.readdirSync('./images');
+//   console.log('[Images2array] Images', Images);
 
-//   const filesArray = [];
+//   const ImagesArray = [];
 
-//   for (const file of files) {
-//     console.log('[files2array] file', file);
-//     files2array.push(file);
+//   for (const img of Images) {
+//     console.log('[Images2array] img', img);
+//     Images2array.push(img);
 //   }
 
 // }
 
-//TODO send directory files
+//TODO send directory Images
 
 bot.on('qr', qr => {
   console.log('[bot#qr] generating...');
   qrcode.generate(qr, { small: true });
 
-  deleteFilesFolder();
-  createFilesFolder();
+  deleteImagesFolder();
+  createImagesFolder();
 });
 
 bot.on('loading_screen', (percent, message) => {
@@ -139,27 +139,38 @@ bot.on('message', msg => {
   if (msg.body == '/ping') {
     console.log('[bot#message] command /ping');
     msg.reply('pong');
+    return;
   }
 
   if (!filterChat(msg.from)) return;
 
-  if (msg.body == '/list') {
-    console.log('[bot#message] command /list');
-    msg.reply('list');
-  }
-
   if (msg.hasMedia) {
     console.log('[bot#message] hasMedia');
     msg.reply('hasMedia');
+    return;
   }
-  //TODO read file blob
-  // saveFileBlob(msg);
+
+  if (msg.body == '/list') {
+    console.log('[bot#message] command /list');
+    msg.reply('list');
+    return;
+  }
+
+  if (msg.body.includes('/show ')) {
+    console.log('[bot#message] command /show');
+
+    const id = msg.body.replace('/show ', '');
+    msg.reply(`*#${id}*`);
+    return;
+  }
+  //TODO read img blob
+  // saveImgBlob(msg);
 });
 
 //? Main
 console.log('\n[bot] starting...');
 
-createFilesFolder();
+createImagesFolder();
 
 bot.initialize();
 
