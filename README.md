@@ -11,7 +11,11 @@ Save files from specific chats.
 ```bash
 npm i
 ```
-> MessageMedia HOTFIX: `node_modules\whatsapp-web.js\src\util\Injected.js` **window.Store.MediaPrep = window.mR.findModule('prepRawMedia')[0];**
+
+> MessageMedia HOTFIX:
+> `node_modules\whatsapp-web.js\src\util\Injected.js:20`
+>
+>     window.Store.MediaPrep = window.mR.findModule('prepRawMedia')[0];
 ## How to run:
 ```bash
 npm start
