@@ -148,7 +148,7 @@ bot.on('message', async msg => {
     const dataUrl = msg._data.body;
     console.log('[bot#message] dataUrl', dataUrl);
 
-    const filename = msg._data.caption == '' ? msg.id.id : msg._data.caption.replace(/ /g, '_');
+    const filename = !msg._data.caption ? msg.id.id : msg._data.caption.replace(/ /g, '_');
     console.log('[bot#message] filename', filename);
 
     saveImage(dataUrl, filename);
