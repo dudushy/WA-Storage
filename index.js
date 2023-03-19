@@ -1,6 +1,6 @@
+//? Variables
 require('dotenv').config();
 
-//? Variables
 const qrcode = require('qrcode-terminal');
 
 // const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
@@ -9,6 +9,9 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const fs = require('fs');
 
 // const CHROME_PATH = 'C:/Program Files/Google/Chrome/Application/chrome.exe'; //! UNUSED
+
+const TITLE = '*@WA-Storage*\n';
+const COMMANDS = `${TITLE}\nComandos:\n/ping - pong\n/list - lista arquivos`;
 
 const bot = new Client({
   authStrategy: new LocalAuth(),
@@ -45,10 +48,44 @@ function sleep(seconds) {
   return new Promise(resolve => { console.log(`[sleep] ${seconds}s`); setTimeout(resolve, seconds * 1000); });
 }
 
-//TODO filter chat by id (CONTACT)
-//TODO read file blob
+function filterChat(chat) { //* filter chat by id (CONTACT)
+  const id = chat.replace('@c.us', '');
+  console.log('[filterChat] id', id);
+
+  const contacts = process.env.CONTACTS.split(' ');
+  console.log('[filterChat] contacts', contacts);
+
+  const result = contacts.includes(id);
+  console.log('[filterChat] result', result);
+
+  return result;
+}
+
 //TODO save file blob
+// function saveFileBlob(file) {
+//   const filename = file.filename;
+//   const data = file.data;
+
+//   fs.writeFile(`./files/${filename}`, data, (err) => {
+//     if (err) throw err;
+//     console.log('[saveFileBlob] saved', filename);
+//   });
+// }
+
 //TODO read file directory
+// function files2array() {
+//   const files = fs.readdirSync('./files');
+//   console.log('[files2array] files', files);
+
+//   const filesArray = [];
+
+//   for (const file of files) {
+//     console.log('[files2array] file', file);
+//     files2array.push(file);
+//   }
+
+// }
+
 //TODO send directory files
 
 bot.on('qr', qr => {
@@ -78,13 +115,17 @@ bot.on('ready', async () => {
   console.log('[bot#ready] WWebJS version:', require('whatsapp-web.js').version);
 
   if (process.argv[2] == '--debug') {
-    const chatId = await bot.getNumberId(process.env.CONTACT);
-    console.log('[bot#ready/debug] chatId', chatId._serialized);
+    for (const contact of process.env.CONTACTS.split(' ')) {
+      const chatId = await bot.getNumberId(contact);
+      console.log('[bot#ready/debug] chatId', chatId._serialized);
 
-    const msg = '*# WA-Storage*\nEstou pronto para salvar arquivos!';
+      await bot.sendMessage(chatId._serialized, COMMANDS);
+      console.log('[bot#ready/debug] sent COMMANDS:', COMMANDS);
 
-    await bot.sendMessage(chatId._serialized, msg);
-    console.log('[bot#ready/debug] sent', msg);
+      const msg = `${TITLE}Estou pronto para salvar arquivos!`;
+      await bot.sendMessage(chatId._serialized, msg);
+      console.log('[bot#ready/debug] sent msg:', msg);
+    }
   }
 });
 
@@ -95,9 +136,24 @@ bot.on('disconnected', (reason) => {
 bot.on('message', msg => {
   console.log('[bot#message] received', msg);
 
-  if (msg.body == '!ping') {
+  if (msg.body == '/ping') {
+    console.log('[bot#message] command /ping');
     msg.reply('pong');
   }
+
+  if (!filterChat(msg.from)) return;
+
+  if (msg.body == '/list') {
+    console.log('[bot#message] command /list');
+    msg.reply('list');
+  }
+
+  if (msg.hasMedia) {
+    console.log('[bot#message] hasMedia');
+    msg.reply('hasMedia');
+  }
+  //TODO read file blob
+  // saveFileBlob(msg);
 });
 
 //? Main
