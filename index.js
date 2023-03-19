@@ -11,7 +11,7 @@ const fs = require('fs');
 // const CHROME_PATH = 'C:/Program Files/Google/Chrome/Application/chrome.exe'; //! UNUSED
 
 const TITLE = '*@WA-Storage*\n';
-const COMMANDS = `${TITLE}\nComandos:\n/ping - pong\n/list - lista arquivos`;
+const COMMANDS = `${TITLE}Comandos:\n/ping - pong\n/list - lista arquivos`;
 
 const bot = new Client({
   authStrategy: new LocalAuth(),
