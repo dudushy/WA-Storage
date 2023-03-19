@@ -11,7 +11,7 @@ const fs = require('fs');
 // const CHROME_PATH = 'C:/Program Files/Google/Chrome/Application/chrome.exe'; //! UNUSED
 
 const TITLE = '*@WA-Storage*\n';
-const COMMANDS = `${TITLE}Comandos:\n/ping - pong\n/list - lista arquivos`;
+const COMMANDS = `${TITLE}Comandos:\n/ping - pong\n/list - lista arquivos\n/show [id] - mostra arquivo`;
 
 const bot = new Client({
   authStrategy: new LocalAuth(),
@@ -61,16 +61,14 @@ function filterChat(chat) { //* filter chat by id (CONTACT)
   return result;
 }
 
-//TODO save img
-// function saveFileBlob(file) {
-//   const filename = file.filename;
-//   const data = file.data;
+function saveImage(dataUrl, filename) {
+  console.log('[saveFileBlob] filename', filename);
 
-//   fs.writeFile(`./images/${filename}`, data, (err) => {
-//     if (err) throw err;
-//     console.log('[saveFileBlob] saved', filename);
-//   });
-// }
+  fs.writeFile(`./images/${filename}.png`, dataUrl, 'base64', (err) => {
+    if (err) throw err;
+    console.log('[saveImage] saved', filename);
+  });
+}
 
 //TODO read img directory
 // function Images2array() {
@@ -85,8 +83,6 @@ function filterChat(chat) { //* filter chat by id (CONTACT)
 //   }
 
 // }
-
-//TODO send directory Images
 
 bot.on('qr', qr => {
   console.log('[bot#qr] generating...');
@@ -133,7 +129,7 @@ bot.on('disconnected', (reason) => {
   console.log('[bot#disconnected] client disconnected', reason);
 });
 
-bot.on('message', msg => {
+bot.on('message', async msg => {
   console.log('[bot#message] received', msg);
 
   if (msg.body == '/ping') {
@@ -146,7 +142,16 @@ bot.on('message', msg => {
 
   if (msg.hasMedia) {
     console.log('[bot#message] hasMedia');
-    msg.reply('hasMedia');
+
+    const dataUrl = msg._data.body;
+    console.log('[bot#message] dataUrl', dataUrl);
+
+    const filename = msg._data.caption.replace(/ /g, '_') == '' ? msg.id.id : msg._data.caption.replace(/ /g, '_');
+    console.log('[bot#message] filename', filename);
+
+    saveImage(dataUrl, filename);
+
+    msg.reply(`${TITLE}Imagem salva!\n*id*: \`\`\`${filename}\`\`\``);
     return;
   }
 
@@ -163,8 +168,6 @@ bot.on('message', msg => {
     msg.reply(`*#${id}*`);
     return;
   }
-  //TODO read img blob
-  // saveImgBlob(msg);
 });
 
 //? Main
