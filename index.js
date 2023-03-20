@@ -139,7 +139,7 @@ bot.on('message', async msg => {
 
   if (process.argv[2] == '--debug') if (!filterChat(msg.from)) return;
 
-  if (msg.hasMedia) {
+  if (msg.hasMedia && msg.type == 'image') {
     console.log('[bot#message] hasMedia');
 
     // const media = await msg.downloadMedia(); //! OUT OF ORDER
